@@ -1,0 +1,302 @@
+.landing-eyebrow {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--cyan);
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+/* Hero — the fluid sim / gradient fallback sits absolutely behind the
+   text at z-index 0; a radial scrim on top keeps headline text readable
+   without fully hiding the effect, and text content sits above both at
+   z-index 2. */
+.landing-hero {
+  position: relative;
+  padding: 140px 0 150px;
+  text-align: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-hairline);
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, var(--bg-base-alt), var(--bg-base));
+}
+
+.landing-hero-bg {
+  position: absolute !important;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.landing-hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 60% 50% at 50% 40%, transparent 0%, var(--bg-base) 78%);
+}
+
+.landing-hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+}
+
+.landing-hero h1 {
+  font-size: 3.4rem;
+  margin-bottom: 22px;
+  letter-spacing: -0.02em;
+}
+
+.landing-hero-accent {
+  background: linear-gradient(120deg, var(--violet) 10%, var(--cyan) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.landing-hero-sub {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  max-width: 560px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+.landing-hero-search {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.landing-hero-hint {
+  color: var(--text-tertiary);
+  font-size: 0.82rem;
+  margin-top: 14px;
+}
+
+.landing-section {
+  padding: 96px 0;
+  position: relative;
+}
+
+.landing-section-alt {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-hairline);
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.landing-section-header {
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto 48px;
+}
+
+.landing-section-header h2 {
+  font-size: 1.9rem;
+}
+
+/* Feature scroll-stack — cards pin and scale as you scroll past them,
+   giving the "cards physically stacking in front of you" effect. Each
+   card is a glass panel. */
+.landing-scroll-stack {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.landing-feature-stack-card {
+  background: var(--bg-glass-strong);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-hairline-strong);
+  box-shadow: var(--shadow-card);
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+}
+
+.landing-feature-card-inner {
+  padding: 36px 40px;
+  width: 100%;
+}
+
+.landing-feature-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 3px 10px;
+  margin-bottom: 14px;
+}
+
+.landing-feature-tag-core {
+  color: var(--violet);
+  background: var(--violet-soft);
+  border: 1px solid var(--violet-line);
+}
+
+.landing-feature-tag-new {
+  color: var(--cyan);
+  background: var(--cyan-soft);
+  border: 1px solid var(--cyan-line);
+}
+
+.landing-feature-stack-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+}
+
+.landing-feature-stack-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 52ch;
+}
+
+.landing-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.landing-step {
+  text-align: center;
+  padding: 0 12px;
+}
+
+.landing-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: var(--cyan);
+  border: 1px solid var(--cyan-line);
+  background: var(--cyan-soft);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 16px;
+}
+
+.landing-step h3 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.landing-step p {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.landing-faq-list {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.landing-faq-item {
+  padding: 18px 22px;
+}
+
+.landing-faq-item summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.landing-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.landing-faq-item summary::after {
+  content: "+";
+  color: var(--violet);
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.landing-faq-item[open] summary::after {
+  content: "−";
+}
+
+.landing-faq-item p {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin-top: 12px;
+}
+
+.landing-cta {
+  padding: 90px 0;
+  text-align: center;
+  background: radial-gradient(ellipse 60% 100% at 50% 0%, var(--violet-soft), var(--bg-ink-panel) 70%);
+  color: var(--text-on-ink-secondary);
+}
+
+.landing-cta h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: var(--text-on-ink);
+}
+
+.landing-cta p {
+  color: var(--text-on-ink-secondary);
+  margin-bottom: 28px;
+}
+
+.landing-cta-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--violet), var(--violet-deep));
+  color: var(--text-on-ink);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 14px 32px;
+  border-radius: var(--radius-sm);
+  transition: filter 0.15s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.landing-cta-btn:hover {
+  filter: brightness(1.12);
+  box-shadow: var(--shadow-glow-violet);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 860px) {
+  .landing-hero {
+    padding: 100px 0 90px;
+  }
+
+  .landing-hero h1 {
+    font-size: 2.3rem;
+  }
+
+  .landing-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-feature-card-inner {
+    padding: 28px 26px;
+  }
+}
+
+@media (max-width: 520px) {
+  .handle-search {
+    flex-direction: column;
+  }
+
+  .landing-hero h1 {
+    font-size: 1.9rem;
+  }
+}

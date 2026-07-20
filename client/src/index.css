@@ -1,0 +1,244 @@
+/* ==========================================================================
+   CP Insights — Design System
+   Dark arena: near-black canvas, glass panels, electric violet/cyan accent
+   pair. Built for a 1v1 competitive platform — the mood is "ranked match
+   lobby", not "dashboard SaaS". CF rank-tier colors stay mapped as-is since
+   that's a convention users already carry over from Codeforces itself; they
+   read as functional signal (this problem is red = hard) on top of the
+   violet/cyan brand accent, not as competing brand colors.
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+:root {
+  /* Canvas — layered near-blacks so panels can sit on top of panels
+     without everything collapsing into one flat slab */
+  --bg-base: #08070C;
+  --bg-base-alt: #0C0A14;
+  --bg-surface: #131019;
+  --bg-surface-raised: #191521;
+  --bg-ink-panel: #08070C;
+  --bg-glass: rgba(24, 20, 34, 0.6);
+  --bg-glass-strong: rgba(24, 20, 34, 0.85);
+  --border-hairline: rgba(255, 255, 255, 0.07);
+  --border-hairline-strong: rgba(255, 255, 255, 0.14);
+
+  /* Text */
+  --text-primary: #F3F1FA;
+  --text-secondary: #9C96B3;
+  --text-tertiary: #67617F;
+  --text-on-ink: #F3F1FA;
+  --text-on-ink-secondary: #9C96B3;
+
+  /* Electric accent pair — violet is the primary brand action color,
+     cyan is the secondary/highlight color used for glow accents and
+     "live" states (queue pulse, active duel, online indicators) */
+  --violet: #8B5CF6;
+  --violet-deep: #7C3AED;
+  --violet-soft: rgba(139, 92, 246, 0.14);
+  --violet-line: rgba(139, 92, 246, 0.4);
+  --cyan: #22D3EE;
+  --cyan-deep: #06B6D4;
+  --cyan-soft: rgba(34, 211, 238, 0.14);
+  --cyan-line: rgba(34, 211, 238, 0.4);
+
+  /* Back-compat aliases so every existing "gold" reference (badges,
+     saved-handle "You" tag, sync warnings, etc.) picks up the new accent
+     automatically without a find/replace across every component file */
+  --gold: var(--violet);
+  --gold-deep: var(--violet-deep);
+  --gold-soft: var(--violet-soft);
+  --gold-line: var(--violet-line);
+
+  /* Codeforces rank-tier colors — unchanged, kept CF-standard, but bumped
+     slightly brighter than the stock CF palette so they hold their own
+     against a near-black background instead of looking muddy */
+  --rank-newbie: #9C96B3;
+  --rank-pupil: #5FD34A;
+  --rank-specialist: #2DD4C4;
+  --rank-expert: #4C8DFF;
+  --rank-candidate-master: #C158F0;
+  --rank-master: #F0B429;
+  --rank-grandmaster: #FF6B4A;
+  --rank-legendary: #FF3B5C;
+
+  --accent: var(--violet);
+  --accent-soft: var(--violet-soft);
+
+  /* Semantic */
+  --success: #4ADE80;
+  --danger: #FB5768;
+
+  /* Type */
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-ui: "Inter", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", monospace;
+
+  /* Radii & spacing rhythm */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  /* Glow-forward shadow system — dark UIs read depth through light
+     bloom, not soft drop-shadows, so cards get a colored glow on hover
+     instead of just a bigger black shadow */
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 16px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 1px var(--violet-line);
+  --shadow-glow-violet: 0 0 40px rgba(139, 92, 246, 0.25);
+  --shadow-glow-cyan: 0 0 40px rgba(34, 211, 238, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* Shared layout shell used by every page */
+.page-shell {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* App-level flex shell so the footer stays pinned to the bottom of the
+   viewport on short pages instead of floating mid-screen */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+.app-main {
+  flex: 1;
+}
+
+/* Reusable glass-panel card surface — every dashboard panel, form, etc.
+   builds on this. Frosted glass over the dark canvas instead of a flat
+   opaque card, so panels feel like they're floating above the arena
+   rather than sitting on a page. */
+.card {
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-hairline-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+/* Thin glowing rule — the recurring device used to separate masthead
+   sections, section headers, and footer bands */
+.gold-rule {
+  height: 1px;
+  border: none;
+  margin: 0;
+  background: linear-gradient(90deg, var(--violet-line), transparent 85%);
+}
+
+/* Shared handle-search component (HandleSearchBar.jsx) - used on the
+   Landing page, Dashboard, and Profile page. Defined globally here rather
+   than in any single page's stylesheet, since a page-scoped CSS file is
+   only loaded on that page's route - keeping this in profile.css meant it
+   silently had zero styling on Landing/Dashboard, which never import it. */
+.handle-search {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.handle-search-input {
+  flex: 1;
+  background: var(--bg-glass-strong);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-hairline-strong);
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.handle-search-input:focus {
+  outline: none;
+  border-color: var(--violet);
+  box-shadow: 0 0 0 3px var(--violet-soft);
+}
+
+.handle-search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.handle-search-submit {
+  background: linear-gradient(135deg, var(--violet), var(--violet-deep));
+  color: var(--text-on-ink);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0 22px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: filter 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.handle-search-submit:hover {
+  filter: brightness(1.12);
+  box-shadow: var(--shadow-glow-violet);
+}
+
+.handle-search-submit:active {
+  transform: scale(0.98);
+}
+
+/* Focus states must stay visible for keyboard nav (accessibility floor) */
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+

@@ -1,0 +1,323 @@
+.profile-page {
+  padding: 32px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profile-search-row {
+  max-width: 480px;
+}
+
+.profile-loading {
+  min-height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.profile-error {
+  padding: 40px;
+  text-align: center;
+  max-width: 480px;
+  margin: 60px auto;
+}
+
+.profile-error h2 {
+  margin-bottom: 8px;
+}
+
+.profile-error p {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.profile-error-back {
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.profile-error-back:hover {
+  text-decoration: underline;
+}
+
+/* Editorial masthead — the profile page's signature element. Reads like a
+   magazine title page for the handle rather than a dashboard header card. */
+.masthead {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-hairline);
+  border-top: 3px solid var(--card-accent, var(--gold));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 32px 36px 34px;
+}
+
+.masthead-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.masthead-identity {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+.masthead-avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--card-accent, var(--gold));
+  flex-shrink: 0;
+}
+
+.masthead-titling {
+  min-width: 0;
+}
+
+.masthead-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--card-accent, var(--gold));
+}
+
+.masthead-eyebrow-dot {
+  color: var(--text-tertiary);
+}
+
+.masthead-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.masthead-name {
+  font-size: 2.1rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.masthead-source-badge {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-hairline-strong);
+  border-radius: 4px;
+  padding: 2px 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.masthead-save-btn {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold-deep);
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.masthead-save-btn:hover:not(:disabled) {
+  background: var(--gold-soft);
+}
+
+.masthead-save-btn:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.masthead-rule {
+  margin: 24px 0 22px;
+}
+
+.masthead-stat-row {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr 1fr;
+  gap: 32px;
+}
+
+.masthead-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.masthead-stat-value {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.masthead-stat-value-hero {
+  font-size: 2.6rem;
+  color: var(--card-accent, var(--gold));
+  line-height: 1;
+}
+
+.masthead-stat-label {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.profile-chart-section {
+  padding: 26px 28px 22px;
+}
+
+.profile-chart-section h2 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.profile-chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.profile-lower-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+}
+
+.chart-canvas-wrap {
+  height: 280px;
+  position: relative;
+}
+
+.chart-canvas-wrap-tall {
+  height: 320px;
+}
+
+.chart-empty {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 860px) {
+  .profile-chart-grid,
+  .profile-lower-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .masthead-stat-row {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 20px;
+  }
+
+  .masthead-top {
+    flex-wrap: wrap;
+  }
+
+  .masthead-name {
+    font-size: 1.6rem;
+  }
+
+  .masthead-stat-value-hero {
+    font-size: 2.1rem;
+  }
+}
+/* Activity heatmap */
+.heatmap-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.heatmap-month-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 13px;
+  padding-left: 2px;
+}
+
+.heatmap-month-label {
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.heatmap-grid {
+  display: flex;
+  gap: 3px;
+}
+
+.heatmap-column {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.heatmap-cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.heatmap-cell-empty {
+  background: transparent;
+}
+
+.heatmap-cell-0 {
+  background: var(--border-hairline);
+}
+
+.heatmap-cell-1 {
+  background: rgba(139, 92, 246, 0.28);
+}
+
+.heatmap-cell-2 {
+  background: rgba(139, 92, 246, 0.55);
+}
+
+.heatmap-cell-3 {
+  background: var(--gold);
+}
+
+.heatmap-cell-4 {
+  background: var(--gold-deep);
+}
+
+.heatmap-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 0.76rem;
+  color: var(--text-tertiary);
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

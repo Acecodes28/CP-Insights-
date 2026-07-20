@@ -1,0 +1,24 @@
+.scroll-stack-scroller {
+  position: relative;
+  width: 100%;
+  /* When useWindowScroll is true (our landing page usage), this element
+     doesn't scroll itself - Lenis drives window scroll instead - so it
+     just needs to lay its children out normally. */
+}
+
+.scroll-stack-inner {
+  display: flex;
+  flex-direction: column;
+  padding: 4vh 0 2vh;
+}
+
+.scroll-stack-card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  transform-origin: top center;
+}
+
+.scroll-stack-end {
+  height: 1px;
+  width: 100%;
+}
