@@ -104,6 +104,16 @@ export function DuelProvider({ children }) {
     socketRef.current?.emit("duel:join-room", { duelId });
   }, []);
 
+  const forfeitRound = useCallback((duelId) => {
+    setDuelError("");
+    socketRef.current?.emit("duel:forfeit-round", { duelId });
+  }, []);
+
+  const forfeitMatch = useCallback((duelId) => {
+    setDuelError("");
+    socketRef.current?.emit("duel:forfeit-match", { duelId });
+  }, []);
+
   // Lets a component subscribe to raw duel:updated events (e.g. to react
   // to a SPECIFIC duel id rather than whatever's currently "active" in
   // context state) without a second socket connection.
@@ -128,6 +138,8 @@ export function DuelProvider({ children }) {
         joinQueue,
         leaveQueue,
         joinDuelRoom,
+        forfeitRound,
+        forfeitMatch,
         onDuelUpdate,
         clearActiveDuel,
       }}
