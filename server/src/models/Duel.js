@@ -19,7 +19,7 @@ const DuelRoundSchema = new mongoose.Schema(
     resolvedAt: { type: Date, default: null },
     resolution: {
       type: String,
-      enum: ["solved", "timeout", null],
+      enum: ["solved", "timeout", "forfeit", null],
       default: null,
     },
   },
