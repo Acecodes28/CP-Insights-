@@ -427,6 +427,41 @@
   text-align: center;
 }
 
+.duel-forfeit-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding-top: 4px;
+}
+
+.duel-forfeit-btn {
+  background: transparent;
+  border: 1px solid var(--border-hairline-strong);
+  color: var(--text-tertiary);
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.duel-forfeit-btn:hover {
+  border-color: var(--text-secondary);
+  color: var(--text-secondary);
+}
+
+.duel-forfeit-btn-match:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.duel-error-text {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--danger);
+  padding-top: 12px;
+}
+
 .duel-result {
   text-align: center;
   padding: 12px 0 24px;
