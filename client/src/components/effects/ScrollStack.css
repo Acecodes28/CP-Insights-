@@ -16,7 +16,25 @@
   position: relative;
   border-radius: var(--radius-lg);
   transform-origin: top center;
+  contain: layout style;
+  will-change: transform, filter;
+  backface-visibility: hidden;
 }
+
+/* Explicit paint-order stacking so later cards in the DOM always composite
+   above earlier ones as they pin - without this the browser infers paint
+   order from transform changes mid-scroll, which is what caused the
+   flicker/glitch (compositing layers reordering every frame instead of
+   holding a stable z-order). nth-child covers a reasonable feature-list
+   length; add more rules here if a stack ever needs more items. */
+.scroll-stack-card:nth-child(1) { z-index: 1; }
+.scroll-stack-card:nth-child(2) { z-index: 2; }
+.scroll-stack-card:nth-child(3) { z-index: 3; }
+.scroll-stack-card:nth-child(4) { z-index: 4; }
+.scroll-stack-card:nth-child(5) { z-index: 5; }
+.scroll-stack-card:nth-child(6) { z-index: 6; }
+.scroll-stack-card:nth-child(7) { z-index: 7; }
+.scroll-stack-card:nth-child(8) { z-index: 8; }
 
 .scroll-stack-end {
   height: 1px;
