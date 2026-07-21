@@ -122,6 +122,19 @@
   padding: 0 24px;
 }
 
+/* Mobile fallback for the feature list - same cards, plain vertical
+   stack, no scroll-jacking transform math. */
+.landing-feature-plain-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 640px;
+}
+
+.landing-feature-plain-list .landing-feature-stack-card {
+  min-height: 0;
+}
+
 .landing-feature-stack-card {
   background: var(--bg-glass-strong);
   backdrop-filter: blur(14px);
