@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import HandleSearchBar from "../components/profile/HandleSearchBar";
 import HeroBackground from "../components/effects/HeroBackground";
 import ScrollStack, { ScrollStackItem } from "../components/effects/ScrollStack";
+import useIsNarrowViewport from "../hooks/useIsNarrowViewport";
 import "../styles/landing.css";
 
 const FEATURES = [
@@ -66,6 +67,15 @@ const FAQS = [
 
 export default function LandingPage() {
   const { user } = useAuth();
+  const isNarrow = useIsNarrowViewport(720);
+
+  const featureCards = FEATURES.map((f) => (
+    <div key={f.title} className="landing-feature-card-inner">
+      {f.tag && <span className={`landing-feature-tag landing-feature-tag-${f.tag.toLowerCase()}`}>{f.tag}</span>}
+      <h3>{f.title}</h3>
+      <p>{f.desc}</p>
+    </div>
+  ));
 
   return (
     <div className="landing">
@@ -100,28 +110,37 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <ScrollStack
-          className="landing-scroll-stack"
-          useWindowScroll
-          itemDistance={90}
-          itemScale={0.035}
-          itemStackDistance={26}
-          stackPosition="18%"
-          scaleEndPosition="8%"
-          baseScale={0.88}
-          rotationAmount={0.4}
-          blurAmount={0.6}
-        >
-          {FEATURES.map((f) => (
-            <ScrollStackItem key={f.title} itemClassName="landing-feature-stack-card">
-              <div className="landing-feature-card-inner">
-                {f.tag && <span className={`landing-feature-tag landing-feature-tag-${f.tag.toLowerCase()}`}>{f.tag}</span>}
-                <h3>{f.title}</h3>
-                <p>{f.desc}</p>
+        {isNarrow ? (
+          // Plain stacked list on narrow viewports - same content, no
+          // scroll-jacking pin/scale math, which reads as heavy and can
+          // eat a lot of scroll distance on a phone-sized screen.
+          <div className="page-shell landing-feature-plain-list">
+            {FEATURES.map((f, i) => (
+              <div key={f.title} className="landing-feature-stack-card">
+                {featureCards[i]}
               </div>
-            </ScrollStackItem>
-          ))}
-        </ScrollStack>
+            ))}
+          </div>
+        ) : (
+          <ScrollStack
+            className="landing-scroll-stack"
+            useWindowScroll
+            itemDistance={90}
+            itemScale={0.035}
+            itemStackDistance={26}
+            stackPosition="18%"
+            scaleEndPosition="8%"
+            baseScale={0.88}
+            rotationAmount={0.4}
+            blurAmount={0.6}
+          >
+            {FEATURES.map((f, i) => (
+              <ScrollStackItem key={f.title} itemClassName="landing-feature-stack-card">
+                {featureCards[i]}
+              </ScrollStackItem>
+            ))}
+          </ScrollStack>
+        )}
       </section>
 
       <section className="landing-section landing-section-alt" id="how-it-works">
