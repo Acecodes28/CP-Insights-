@@ -2,6 +2,19 @@
   background: var(--bg-ink-panel);
   color: var(--text-on-ink-secondary);
   margin-top: 96px;
+  position: relative;
+  overflow: hidden;
+}
+
+.site-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 240px;
+  background: radial-gradient(ellipse 70% 100% at 20% 0%, rgba(240, 180, 41, 0.06), transparent 70%);
+  pointer-events: none;
 }
 
 .site-footer-inner {
@@ -52,7 +65,7 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--rank-master);
   margin-bottom: 2px;
   margin-top:40px;
 }
@@ -69,8 +82,10 @@
 }
 
 .site-footer .gold-rule {
-  background: linear-gradient(90deg, transparent, var(--gold-line) 15%, var(--gold-line) 85%, transparent);
-  opacity: 0.5;
+  background: linear-gradient(90deg, transparent, rgba(240, 180, 41, 0.35) 15%, rgba(240, 180, 41, 0.35) 85%, transparent);
+  opacity: 0.6;
+  position: relative;
+  z-index: 1;
 }
 
 .site-footer-bottom {
