@@ -83,6 +83,24 @@
   background: var(--bg-surface);
   border-top: 1px solid var(--border-hairline);
   border-bottom: 1px solid var(--border-hairline);
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-section-alt::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--cyan-soft), transparent 70%);
+  pointer-events: none;
+}
+
+.landing-section-alt .page-shell {
+  position: relative;
+  z-index: 1;
 }
 
 .landing-section-header {
@@ -106,13 +124,14 @@
 
 .landing-feature-stack-card {
   background: var(--bg-glass-strong);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--border-hairline-strong);
   box-shadow: var(--shadow-card);
   min-height: 200px;
   display: flex;
   align-items: center;
+  contain: layout style paint;
 }
 
 .landing-feature-card-inner {
@@ -190,6 +209,27 @@
   color: var(--text-secondary);
   font-size: 0.88rem;
   line-height: 1.5;
+}
+
+.landing-section#faq {
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-section#faq::before {
+  content: "";
+  position: absolute;
+  bottom: -15%;
+  left: -10%;
+  width: 460px;
+  height: 460px;
+  background: radial-gradient(circle, rgba(193, 88, 240, 0.05), transparent 70%);
+  pointer-events: none;
+}
+
+.landing-section#faq .page-shell {
+  position: relative;
+  z-index: 1;
 }
 
 .landing-faq-list {
