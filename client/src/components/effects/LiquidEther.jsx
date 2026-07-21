@@ -21,7 +21,14 @@ export default function LiquidEther({
   autoIntensity = 2.2,
   takeoverDuration = 0.25,
   autoResumeDelay = 1000,
-  autoRampDuration = 0.6
+  autoRampDuration = 0.6,
+  // When set, the sim is visible everywhere from the first frame - a
+  // faint tint of this color at rest, blending up to full `colors` at
+  // full velocity - instead of being fully transparent until the mouse
+  // (or auto-driver) has disturbed a given area. Omit/0 alpha to keep
+  // the original "invisible until touched" behavior.
+  ambientColor = '#8B5CF6',
+  ambientAlpha = 0.16
 }) {
   const mountRef = useRef(null);
   const webglRef = useRef(null);
@@ -66,6 +73,7 @@ export default function LiquidEther({
 
     const paletteTex = makePaletteTexture(colors);
     const bgVec4 = new THREE.Vector4(0, 0, 0, 0); // always transparent
+    const ambientColorVec3 = new THREE.Color(ambientColor);
 
     class CommonClass {
       constructor() {
@@ -401,13 +409,21 @@ export default function LiquidEther({
     uniform sampler2D velocity;
     uniform sampler2D palette;
     uniform vec4 bgColor;
+    uniform vec3 ambientColor;
+    uniform float ambientAlpha;
     varying vec2 uv;
     void main(){
     vec2 vel = texture2D(velocity, uv).xy;
     float lenv = clamp(length(vel), 0.0, 1.0);
     vec3 c = texture2D(palette, vec2(lenv, 0.5)).rgb;
-    vec3 outRGB = mix(bgColor.rgb, c, lenv);
-    float outA = mix(bgColor.a, 1.0, lenv);
+    // At rest (lenv ~ 0) this resolves toward ambientColor/ambientAlpha
+    // instead of bgColor's transparent black - so the effect reads as
+    // "always present, reacting to motion" rather than "invisible until
+    // touched". ambientAlpha = 0 exactly reproduces the original
+    // fully-transparent-at-rest behavior.
+    float restA = max(bgColor.a, ambientAlpha);
+    vec3 outRGB = mix(ambientColor, c, lenv);
+    float outA = mix(restA, 1.0, lenv);
     gl_FragColor = vec4(outRGB, outA);
 }
 `;
@@ -901,7 +917,9 @@ export default function LiquidEther({
               velocity: { value: this.simulation.fbos.vel_0.texture },
               boundarySpace: { value: new THREE.Vector2() },
               palette: { value: paletteTex },
-              bgColor: { value: bgVec4 }
+              bgColor: { value: bgVec4 },
+              ambientColor: { value: ambientColorVec3 },
+              ambientAlpha: { value: ambientAlpha }
             }
           })
         );
@@ -1111,7 +1129,9 @@ export default function LiquidEther({
     autoIntensity,
     takeoverDuration,
     autoResumeDelay,
-    autoRampDuration
+    autoRampDuration,
+    ambientColor,
+    ambientAlpha
   ]);
 
   useEffect(() => {
