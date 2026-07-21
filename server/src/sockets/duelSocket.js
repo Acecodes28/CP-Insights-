@@ -7,6 +7,8 @@ const {
   createChallenge,
   acceptChallenge,
   createMatchmakingDuel,
+  forfeitRound,
+  forfeitMatch,
   POLL_INTERVAL_MS,
 } = require("../services/duelService");
 
@@ -188,6 +190,57 @@ function initDuelSocket(io) {
     socket.on("duel:queue-leave", () => {
       queue.delete(userId);
       socket.emit("duel:queue-left");
+    });
+
+    socket.on("duel:forfeit-round", async ({ duelId }) => {
+      try {
+        const duel = await Duel.findById(duelId);
+        if (!duel) return socket.emit("duel:error", "Duel not found");
+        if (duel.status !== "active") {
+          return socket.emit("duel:error", "This duel isn't active");
+        }
+
+        // Never trust the client to only call this on its own match -
+        // confirm the requesting user is actually one of the two players
+        // before touching anything, same check forfeit-match uses below.
+        const me = duel.players.find((p) => p.user.toString() === userId);
+        if (!me) return socket.emit("duel:error", "You're not a player in this duel");
+
+        const updated = await forfeitRound(duel, me.handle);
+        io.to(`duel:${duelId}`).emit("duel:updated", updated);
+        if (updated.status === "completed") {
+          const poller = activePollers.get(duelId);
+          if (poller) {
+            clearInterval(poller);
+            activePollers.delete(duelId);
+          }
+        }
+      } catch (err) {
+        console.error("duel:forfeit-round error:", err.message);
+        socket.emit("duel:error", err.message || "Could not forfeit this round");
+      }
+    });
+
+    socket.on("duel:forfeit-match", async ({ duelId }) => {
+      try {
+        const duel = await Duel.findById(duelId);
+        if (!duel) return socket.emit("duel:error", "Duel not found");
+
+        const me = duel.players.find((p) => p.user.toString() === userId);
+        if (!me) return socket.emit("duel:error", "You're not a player in this duel");
+
+        const updated = await forfeitMatch(duel, me.handle);
+        io.to(`duel:${duelId}`).emit("duel:updated", updated);
+
+        const poller = activePollers.get(duelId);
+        if (poller) {
+          clearInterval(poller);
+          activePollers.delete(duelId);
+        }
+      } catch (err) {
+        console.error("duel:forfeit-match error:", err.message);
+        socket.emit("duel:error", err.message || "Could not forfeit this match");
+      }
     });
 
     socket.on("duel:join-room", async ({ duelId }) => {
