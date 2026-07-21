@@ -183,6 +183,86 @@ async function applyDuelCompletion(duel) {
   evaluateBadgesForUser(user2._id).catch((err) => console.error("Badge eval failed:", err.message));
 }
 
+/**
+ * One player forfeits the CURRENT round only. Resolves it as a loss for
+ * the forfeiter (win for the other player) - same shape as a timeout
+ * resolution, but with an explicit winner instead of nobody, and a
+ * distinct resolution value so the round history can say "forfeited"
+ * rather than implying neither player made it in time. Match continues
+ * to the next round (or completes) exactly like any other round result.
+ */
+async function forfeitRound(duel, forfeitingHandle) {
+  const currentRound = duel.rounds[duel.rounds.length - 1];
+  if (!currentRound || currentRound.resolution) {
+    throw new Error("No active round to forfeit");
+  }
+
+  const winner = duel.players.find((p) => p.handle !== forfeitingHandle);
+  if (!winner) throw new Error("Could not determine round winner");
+
+  currentRound.resolvedAt = new Date();
+  currentRound.winnerHandle = winner.handle;
+  currentRound.resolution = "forfeit";
+
+  const prevScore = duel.scores.get(winner.handle) || 0;
+  duel.scores.set(winner.handle, prevScore + 1);
+
+  const leadingScore = Math.max(...duel.players.map((p) => duel.scores.get(p.handle) || 0));
+
+  if (leadingScore >= ROUNDS_TO_WIN) {
+    duel.status = "completed";
+    duel.completedAt = new Date();
+    duel.winnerHandle = winner.handle;
+  } else if (duel.rounds.length >= 3) {
+    duel.status = "completed";
+    duel.completedAt = new Date();
+    duel.winnerHandle = null;
+  }
+
+  await duel.save();
+
+  if (duel.status === "completed") {
+    await applyDuelCompletion(duel);
+  }
+
+  if (duel.status === "active") {
+    await startRound(duel);
+  }
+
+  return duel;
+}
+
+/**
+ * One player forfeits the ENTIRE match, regardless of current score. The
+ * other player is declared the winner outright and Elo/stats are applied
+ * as a normal completion - a forfeit counts as a loss, not a no-contest,
+ * so quitting mid-match isn't a free way to avoid a rating hit.
+ */
+async function forfeitMatch(duel, forfeitingHandle) {
+  if (duel.status !== "active") {
+    throw new Error("This duel isn't active");
+  }
+
+  const winner = duel.players.find((p) => p.handle !== forfeitingHandle);
+  if (!winner) throw new Error("Could not determine match winner");
+
+  const currentRound = duel.rounds[duel.rounds.length - 1];
+  if (currentRound && !currentRound.resolution) {
+    currentRound.resolvedAt = new Date();
+    currentRound.winnerHandle = winner.handle;
+    currentRound.resolution = "forfeit";
+  }
+
+  duel.status = "completed";
+  duel.completedAt = new Date();
+  duel.winnerHandle = winner.handle;
+
+  await duel.save();
+  await applyDuelCompletion(duel);
+
+  return duel;
+}
+
 async function createChallenge({ challengerUser, challengerHandle, challengerRating, opponentUser, opponentHandle, opponentRating, difficultyMin, difficultyMax }) {
   const duel = await Duel.create({
     status: "pending",
@@ -229,6 +309,8 @@ module.exports = {
   createChallenge,
   acceptChallenge,
   createMatchmakingDuel,
+  forfeitRound,
+  forfeitMatch,
   ROUNDS_TO_WIN,
   ROUND_TIMEOUT_MS,
   POLL_INTERVAL_MS,
