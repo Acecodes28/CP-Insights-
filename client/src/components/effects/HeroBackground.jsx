@@ -58,6 +58,8 @@ export default function HeroBackground({ className = "" }) {
         takeoverDuration={0.3}
         autoResumeDelay={2600}
         autoRampDuration={0.6}
+        ambientColor="#5B3FA8"
+        ambientAlpha={0.22}
       />
     </Suspense>
   );
