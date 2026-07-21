@@ -28,9 +28,10 @@ function RoundTimer({ startedAt }) {
 export default function DuelMatchPage() {
   const { id } = useParams();
   const { user } = useAuth();
-  const { activeDuel, joinDuelRoom, onDuelUpdate, acceptChallenge, declineChallenge } = useDuel();
+  const { activeDuel, joinDuelRoom, onDuelUpdate, acceptChallenge, declineChallenge, forfeitRound, forfeitMatch, duelError } = useDuel();
   const [duel, setDuel] = useState(null);
   const [error, setError] = useState("");
+  const [confirmingForfeit, setConfirmingForfeit] = useState(null); // "round" | "match" | null
 
   useEffect(() => {
     fetchDuel(id)
@@ -51,6 +52,19 @@ export default function DuelMatchPage() {
   useEffect(() => {
     if (activeDuel && activeDuel._id === id) setDuel(activeDuel);
   }, [activeDuel, id]);
+
+  // Any successful forfeit resolves via the duel:updated socket event
+  // (handled above), so this dialog just needs to close once that
+  // happens - the duel state itself is what re-renders the page.
+  useEffect(() => {
+    setConfirmingForfeit(null);
+  }, [duel?.status, duel?.rounds?.length]);
+
+  function handleConfirmForfeit() {
+    if (confirmingForfeit === "round") forfeitRound(id);
+    else if (confirmingForfeit === "match") forfeitMatch(id);
+    setConfirmingForfeit(null);
+  }
 
   if (error) {
     return (
@@ -146,6 +160,15 @@ export default function DuelMatchPage() {
             <p className="duel-round-hint">
               Solve it on Codeforces — first Accepted verdict wins the round. We're checking automatically.
             </p>
+
+            <div className="duel-forfeit-actions">
+              <button className="duel-forfeit-btn" onClick={() => setConfirmingForfeit("round")}>
+                Forfeit round
+              </button>
+              <button className="duel-forfeit-btn duel-forfeit-btn-match" onClick={() => setConfirmingForfeit("match")}>
+                Forfeit match
+              </button>
+            </div>
           </div>
         )}
 
@@ -173,12 +196,41 @@ export default function DuelMatchPage() {
                 {r.problemName}
               </a>
               <span className="duel-round-outcome">
-                {r.resolution === "solved" ? `${r.winnerHandle} won` : r.resolution === "timeout" ? "Timed out" : "In progress"}
+                {r.resolution === "solved"
+                  ? `${r.winnerHandle} won`
+                  : r.resolution === "forfeit"
+                  ? `${r.winnerHandle} won (opponent forfeited)`
+                  : r.resolution === "timeout"
+                  ? "Timed out"
+                  : "In progress"}
               </span>
             </div>
           ))}
         </div>
+
+        {duelError && <p className="duel-error-text">{duelError}</p>}
       </div>
+
+      {confirmingForfeit && (
+        <div className="confirm-dialog-overlay">
+          <div className="confirm-dialog card">
+            <h3>{confirmingForfeit === "round" ? "Forfeit this round?" : "Forfeit the match?"}</h3>
+            <p>
+              {confirmingForfeit === "round"
+                ? `${opponent?.handle} will be awarded this round. The match continues if neither side has won yet.`
+                : `${opponent?.handle} will be declared the winner of the entire match, and this will count as a loss.`}
+            </p>
+            <div className="confirm-dialog-actions">
+              <button className="confirm-dialog-cancel" onClick={() => setConfirmingForfeit(null)}>
+                Cancel
+              </button>
+              <button className="confirm-dialog-confirm" onClick={handleConfirmForfeit}>
+                {confirmingForfeit === "round" ? "Forfeit round" : "Forfeit match"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
